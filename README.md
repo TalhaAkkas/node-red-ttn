@@ -10,7 +10,7 @@ npm install btoa
 
 copy 90-TTN.js and 90-TTN.html to node_modules/node-red/nodes/core/parsers/
 
-or npm install https://github.com/willem4ever/node-red-ttn 
+or npm install https://github.com/talhaakkas/node-red-ttn 
 
 reload node-red the new node should appear as decrypt-ttn
 

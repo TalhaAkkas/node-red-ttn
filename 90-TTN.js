@@ -111,7 +111,7 @@ module.exports = function(RED) {
 
 		function deCrypt(data,key,iv) {
 			var decrypted  = CryptoJS.AES.decrypt(data, key, {mode: CryptoJS.mode.ECB, iv:iv,padding: CryptoJS.pad.NoPadding});
-			return decrypted.toString(CryptoJS.enc.Utf8);
+			return decrypted;
 
 		}
         // Do whatever you need to do in here - declare callbacks etc
