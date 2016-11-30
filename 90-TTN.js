@@ -110,59 +110,8 @@ module.exports = function(RED) {
 		}
 
 		function deCrypt(data,key,iv) {
-			//
-			var dLength = data.length-13;
-			var Block_A = new Uint8Array(16);
-			var work = new Uint8Array(dLength);
-			// Copy framebuffer to work buffer
-			for (var i=0;i <dLength;i++)
-				work[i] = data[i+9];
-			//
-			for (i=0;i<dLength;i+=16)
-			{
-				Block_A[0]  = 0x01;
-				Block_A[1]  = 0x00;
-				Block_A[2]  = 0x00;
-				Block_A[3]  = 0x00;
-				Block_A[4]  = 0x00;
-				Block_A[5]  = 0;        // 0 for uplink frames 1 for downlink frames;
-				Block_A[6]  = data[1];  // LSB devAddr 4 bytes
-				Block_A[7]  = data[2];  // ..
-				Block_A[8]  = data[3];  // ..
-				Block_A[9]  = data[4];  // MSB
-				Block_A[10] = data[6];  // LSB framecounter
-				Block_A[11] = data[7];  // MSB framecounter
-				Block_A[12] = 0x00;     // Frame counter upper Bytes
-				Block_A[13] = 0x00;
-				Block_A[14] = 0x00;
-				Block_A[15] = (i>>4)+1;	// block sequence counter 1..
-				//
-				var ix  = CryptoJS.enc.u8array.parse(Block_A);
-				var ox  = CryptoJS.AES.encrypt(ix, key, {mode: CryptoJS.mode.ECB, iv:iv,padding: CryptoJS.pad.NoPadding});
-				var xor = new Buffer(ox.toString(), 'base64');
-				//
-				var j;
-				var k=dLength-i;
-				if (k>=16) k=16;
-				//
-				for (j=0;j<k;j++)
-					work[i+j] ^= xor[j];
-			}
-			var str = String.fromCharCode.apply(null,work);
-			//
-			var obj = {};
-			var node = data[1]+(data[2]<<8)+(data[3]<<16)+(data[4]<<24);
-			obj.node = node.hex(8);
-			if (!isASCII(str)) {
-				obj.base64 = btoa(str);
-				console.log(work.toHexString());
-			}
-			else {
-				obj.string = str;
-				console.log(str);
-			}
-
-			return obj;
+			var decrypted  = CryptoJS.AES.decrypt(data, key, {mode: CryptoJS.mode.ECB, iv:iv,padding: CryptoJS.pad.NoPadding});
+			return decrypted.toString(CryptoJS.enc.Utf8);
 
 		}
         // Do whatever you need to do in here - declare callbacks etc
@@ -173,9 +122,9 @@ module.exports = function(RED) {
         this.on('input', function (msg) {
             // node.warn("I saw a payload: "+msg.payload.rawData);
             // in this example just send it straight on... should process it here really
-			var data = new Buffer(msg.payload.rawData, 'base64');
+			var data = new Buffer(msg.payload.raw, 'base64');
 			var obj = deCrypt(data,this.key,this.iv);;
-			msg.decrypted = obj;
+			msg.payload.decrypted = obj;
             node.send(msg);
         });
 
