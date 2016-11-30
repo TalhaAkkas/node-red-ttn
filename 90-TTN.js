@@ -117,7 +117,7 @@ module.exports = function(RED) {
         // Do whatever you need to do in here - declare callbacks etc
         // Note: this sample doesn't do anything much - it will only send
         // this message once at startup...
-        // Look at other real nodes for some better ideas of what to do....
+        // Look at other real nod es for some better ideas of what to do....
 		// respond to inputs....
         this.on('input', function (msg) {
             // node.warn("I saw a payload: "+msg.payload.rawData);
@@ -137,6 +137,6 @@ module.exports = function(RED) {
 
     // Register the node by name. This must be called before overriding any of the
     // Node functions.
-    RED.nodes.registerType("decrypt-ttn",TTNdecryptNode);
+    RED.nodes.registerType("decrypt-ttn-msg",TTNdecryptNode);
 
 }
