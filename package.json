@@ -1,6 +1,6 @@
 {
     "name"          : "node-red--contrib-ttn-decrypt-msg",
-    "version"       : "0.0.3",
+    "version"       : "0.0.4",
     "description"   : "A Node-RED node to decrypt LoRaWAN messages using your own AppSkey",
     "dependencies"  : {
         "btoa"		: "1.1.2",
@@ -14,7 +14,7 @@
     "keywords": [ "node-red", "decrypt-ttn" ],
     "node-red" : {
         "nodes" : {
-            "decrypt-ttn": "90-TTN.js"
+            "decrypt-ttn-msg": "90-TTN.js"
         }
     },
     "author": {
